@@ -1,6 +1,8 @@
 package daily.easy;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class DivideString2138 {
     public static void main(String[] args) {
@@ -8,7 +10,28 @@ public class DivideString2138 {
         System.out.println(Arrays.toString(divideString(s, 3, 'x')));
     }
 
+//    search for starting index; time: O(max(n,k)), space: O(1)
     public static String[] divideString(String s, int k, char fill) {
+        List<String> res = new ArrayList<>();
+        int n = s.length();
+        int curr = 0; // starting index of each group
+        while(curr < n) {
+            int end = Math.min(curr + k, n);
+            res.add(s.substring(curr, end));
+            curr += k;
+        }
+//        fill the last group if required
+        StringBuilder sb = new StringBuilder(res.getLast());
+        int len = sb.length();
+        if(len < k) {
+            sb.append(String.valueOf(fill).repeat(k - len));
+        }
+        res.set(res.size() - 1, sb.toString());
+        return res.toArray(new String[0]);
+    }
+
+//    def; time: O(max(n,k)), space: O(1)
+    public static String[] divideString1(String s, int k, char fill) {
         int n = s.length(), i, j = 0;
         int length = (int) Math.ceil((double) n/k);
         String[] res = new String[length];
