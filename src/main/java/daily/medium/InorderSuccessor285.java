@@ -2,7 +2,7 @@ package daily.medium;
 
 import common.TreeNode;
 
-public class InorderSucc285 {
+public class InorderSuccessor285 {
     public static void main(String[] args) {
 
     }
