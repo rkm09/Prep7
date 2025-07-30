@@ -3,6 +3,7 @@ package daily.hard;
 import common.TreeNode;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class ClosestKValues272 {
@@ -14,7 +15,7 @@ public class ClosestKValues272 {
     public static List<Integer> closestKValues(TreeNode root, double target, int k) {
         List<Integer> resList = new ArrayList<>();
         dfs(root, resList);
-        resList.sort((a,b) -> Math.abs(a - target) <= Math.abs(b - target) ? -1 : 1);
+        resList.sort(Comparator.comparingInt(n -> (int) Math.abs(n - target)));
         return resList.subList(0, k);
     }
 
