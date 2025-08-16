@@ -5,16 +5,22 @@ public class Max69Number1323 {
         System.out.println(maximum69Number(9669));
     }
 
-    public static int maximum69Number (int num) {
+//    time: O(l)
+    public static int maximum69Number(int num) {
         StringBuilder sb = new StringBuilder(String.valueOf(num));
         for(int i = 0 ; i < sb.length() ; i++) {
-            int digit = sb.charAt(i) - '0';
-            if(digit == 6) {
-                sb.replace(i, i + 1, "9");
+            if(sb.charAt(i) == '6') {
+                sb.setCharAt(i, '9');
                 break;
             }
         }
         return Integer.parseInt(sb.toString());
+    }
+
+
+    public static int maximum69Number1(int num) {
+        String numStr = String.valueOf(num);
+        return Integer.parseInt(numStr.replaceFirst("6", "9"));
     }
 }
 
