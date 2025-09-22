@@ -7,7 +7,7 @@ public class MovieRenting1912 {
 
 //  time: O(nlogn + qlogn), space: O(n) [where q is the number of operations performed]
 class MovieRentingSystem {
-    private class Node {
+    private static class Node {
         final int shop;
         final int movie;
         final int price;
