@@ -24,7 +24,7 @@ public class MaxDistictElements3397 {
 
 //        the smallest possible distinct value(newModValue) must satisfy two conditions:
 //        1. be strictly greater than the last assigned value: lastMod + 1
-//        2. be withing the element's range: minVal (otherwise for a sample case like [2, 10, 20], k = 2 it will not count)
+//        2. be within the element's range: minVal (otherwise for a sample case like [2, 10, 20], k = 2 it will not count)
 //        we choose the maximum of these two floors
             long newModValue = Math.max(lastMod + 1, minVal);
 
