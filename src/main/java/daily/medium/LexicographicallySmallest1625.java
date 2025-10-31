@@ -6,7 +6,7 @@ public class LexicographicallySmallest1625 {
     }
 
     public static String findLexSmallestString(String s, int a, int b) {
-
+        return "";
     }
 }
 
