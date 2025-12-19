@@ -12,15 +12,16 @@ public class MaxProfit3652 {
         int n = prices.length;
         long[] priceSum = new long[n + 1];
         long[] profitSum = new long[n + 1];
-        for(int i = 0 ; i < n ; i++) {
+        for(int i = 0 ; i <= n ; i++) {
             priceSum[i + 1] = priceSum[i] + prices[i];
             profitSum[i + 1] = profitSum[i] + (long) prices[i] * strategy[i];
         }
         long res = profitSum[n];
-        for(int i = k - 1 ; i < n ; i++) {
-            long leftProfit = profitSum[i + 1 - k];
-            long rightProfit = profitSum[n] - profitSum[i + 1];
-            long changeProfit = priceSum[i + 1] - priceSum[i + 1 - k/2];
+//        note that if i = k, we will have to execute till i<=n or else take i = k - 1.
+        for(int i = k ; i <= n ; i++) {
+            long leftProfit = profitSum[i - k];
+            long rightProfit = profitSum[n] - profitSum[i];
+            long changeProfit = priceSum[i] - priceSum[i - k/2];
             res = Math.max(res, leftProfit + changeProfit + rightProfit);
         }
         return res;
