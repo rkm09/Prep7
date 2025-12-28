@@ -1,13 +1,55 @@
 package daily.hard;
 
+import java.util.Arrays;
+import java.util.PriorityQueue;
+
 public class MostBooked2402 {
     public static void main(String[] args) {
         int[][] meetings = {{0,10},{1,5},{2,7},{3,4}};
         System.out.println(mostBooked(2, meetings));
     }
 
+//    priority queue; time: O(M.logM + M.logN + N.logN), space: O(N + sort) [M - meetings, N - rooms]
     public static int mostBooked(int n, int[][] meetings) {
-        return 0;
+        int[] meetingCount = new int[n];
+        PriorityQueue<long[]> usedRooms = new PriorityQueue<>((a,b) -> a[0] != b[0] ? Long.compare(a[0],b[0])
+    : Long.compare(a[1],b[1]));
+        PriorityQueue<Integer> unusedRooms = new PriorityQueue<>();
+
+        for(int i = 0 ; i < n ; i++)
+            unusedRooms.offer(i);
+
+        Arrays.sort(meetings, (a,b) -> a[0] != b[0] ? Integer.compare(a[0],b[0]) :
+                Integer.compare(a[1],b[1]));
+
+        for(int[] meeting : meetings) {
+            int start = meeting[0], end = meeting[1];
+
+            while(!usedRooms.isEmpty() && usedRooms.peek()[0] <= start) {
+                int room = (int) usedRooms.poll()[1];
+                unusedRooms.offer(room);
+            }
+
+            if(!unusedRooms.isEmpty()) {
+                int room = unusedRooms.poll();
+                usedRooms.offer(new long[] {end, room});
+                meetingCount[room]++;
+            } else {
+                long roomAvailabilityTime = usedRooms.peek()[0];
+                int room = (int) usedRooms.poll()[1];
+                usedRooms.offer(new long[] {roomAvailabilityTime + end - start, room});
+                meetingCount[room]++;
+            }
+        }
+
+        int maxMeetingCount = 0, maxMeetingCountRoom = 0;
+        for(int i = 0 ; i < n ; i++) {
+            if(meetingCount[i] > maxMeetingCount) {
+                maxMeetingCount = meetingCount[i];
+                maxMeetingCountRoom = i;
+            }
+        }
+        return maxMeetingCountRoom;
     }
 }
 
@@ -49,4 +91,11 @@ Constraints:
 meetings[i].length == 2
 0 <= starti < endi <= 5 * 105
 All the values of starti are unique.
+ */
+
+/*
+Time complexity:
+Sorting meetings will incur a time complexity of O(M⋅logM).
+Popping and pushing into the priority queue will each cost O(logN). These priority queue operations run inside a for loop that runs at most M times, leading to a time complexity of O(M⋅logN).
+The inner nested loop will incur a time complexity of O(logN). Additionally, initializing the heap of unused rooms takes O(N⋅logN) time in languages like C++ and Java.
  */
