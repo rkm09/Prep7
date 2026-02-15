@@ -23,6 +23,26 @@ public class AddBinary67 {
 //        note: you need to specify radix in toString()
         return x.toString(2);
     }
+
+//    using StringBuilder
+    public static String addBinary1(String a, String b) {
+        int n = a.length(), m = b.length();
+        if(n < m) return addBinary1(b, a);
+        int carry = 0, j = m - 1;
+        StringBuilder sb = new StringBuilder();
+        for(int i = n - 1 ; i >= 0 ; i--) {
+            if(a.charAt(i) == '1') carry++;
+            if(j >= 0 && b.charAt(j--) == '1') carry++;
+            if(carry % 2 == 1) sb.append('1');
+            else sb.append('0');
+            carry /= 2;
+        }
+        if(carry == 1)
+            sb.append('1');
+        return sb.reverse().toString();
+    }
+
+
 }
 
 /*
