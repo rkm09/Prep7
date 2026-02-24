@@ -6,7 +6,7 @@ public class LongestBalanced3721 {
     }
 
     public static int longestBalanced(int[] nums) {
-
+        return 0;
     }
 }
 
