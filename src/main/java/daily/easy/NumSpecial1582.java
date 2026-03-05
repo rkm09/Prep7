@@ -14,11 +14,21 @@ public class NumSpecial1582 {
         for(int row = 0 ; row < m ; row++) {
             for(int col = 0 ; col < n ; col++) {
                 if(mat[row][col] == 1) {
-                    rowCount[col]++;
-                    colCount[row]++;
+                    rowCount[row]++;
+                    colCount[col]++;
                 }
             }
         }
+
+        for(int row = 0 ; row < m ; row++) {
+            for(int col = 0 ; col < n ; col++) {
+                if(mat[row][col] == 1) {
+                    if(rowCount[row] == 1 && colCount[col] == 1)
+                        count++;
+                }
+            }
+        }
+
         return count;
     }
 
