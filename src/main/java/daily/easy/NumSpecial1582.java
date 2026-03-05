@@ -6,25 +6,41 @@ public class NumSpecial1582 {
         System.out.println(numSpecial(mat));
     }
 
-//    brute force; time: O(m.n.(m + n)), space: O(1)
+//    precompute the rows and cols; time: O(m.n), space: O(m + n)
     public static int numSpecial(int[][] mat) {
+        int m = mat.length, n = mat[0].length, count = 0;
+        int[] rowCount = new int[m];
+        int[] colCount = new int[n];
+        for(int row = 0 ; row < m ; row++) {
+            for(int col = 0 ; col < n ; col++) {
+                if(mat[row][col] == 1) {
+                    rowCount[col]++;
+                    colCount[row]++;
+                }
+            }
+        }
+        return count;
+    }
+
+//    brute force; time: O(m.n.(m + n)), space: O(1)
+    public static int numSpecial1(int[][] mat) {
         int m = mat.length, n = mat[0].length, count = 0;
         for(int row = 0 ; row < m ; row++) {
             for(int col = 0 ; col < n ; col++) {
                 if(mat[row][col] == 0) continue;
                 boolean special = true;
                 for(int r = 0 ; r < m ; r++) {
-//                    all the elements in that col, ps: not '1' but 1. don't compare as char by mistake!
-                    if(r != row && mat[r][col] == 1) {
+//                    all the elements in that col; ps: not '1' but 1. don't compare as char by mistake!
+                    if (r != row && mat[r][col] == 1) {
                         special = false;
                         break;
                     }
+                }
+                for (int c = 0 ; c < n ; c++) {
 //                    all the elements in that row
-                    for (int c = 0 ; c < n ; c++) {
-                        if(c != col && mat[row][c] == 1) {
-                            special = false;
-                            break;
-                        }
+                    if(c != col && mat[row][c] == 1) {
+                        special = false;
+                        break;
                     }
                 }
 
