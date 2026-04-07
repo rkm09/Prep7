@@ -21,7 +21,7 @@ public class RobotSim874 {
         for(int[] obs : obstacles) {
             long ox = obs[0];
             long oy = obs[1];
-//            shift x 32 bits and merge with y using bitwise OR [prevent steamrolling]
+//            shift x 32 bits and merge with y using bitwise OR [prevent steamrolling, do not forget 'L']
             obstacleSet.add((ox << 32) | (oy & 0xffffffffL));
         }
 
