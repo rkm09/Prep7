@@ -91,4 +91,11 @@ considering: i < j < k
  - abs(j - k) = k - j;
  - abs(k - i) = k - i;
  total distance = (j - i) + (k - j) + (k - i) = (j - j) + (k  + k) - (i + i) = 2 * (k - i);
+
+ Time Complexity for Hash approach is O(n): [Linear scan of a partitioned input]
+ If each partition were actually size N for every iteration of an outer loop that also runs N times, you would indeed have O(N^2).
+ However, in this specific problem, it is mathematically impossible for that to happen. The total number of elements stored across
+ all partitions is constrained by the size of the original array.The Mathematical Constraint If the outer loop runs V times (where
+ V is the number of unique values), and each sublist has a size s_i, the total number of operations is sum{i=1} to{V} s_i.Because
+ every index from the original array 0 to N-1 is placed into exactly one sublist:sum_{i=1} to {V} s_i = N.
  */
