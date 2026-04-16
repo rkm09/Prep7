@@ -1,12 +1,55 @@
 package daily.hard;
 
+import java.util.Arrays;
+
 public class MinDistance1320 {
     public static void main(String[] args) {
         System.out.println(minimumDistance("CAKE"));
     }
 
-//    dp; optimized(2d); time: O(n * 26), space: O(n * 26)
+
+//    space optimized dp; time: O(n * 26), space: O(26)
     public static int minimumDistance(String word) {
+        int n = word.length();
+//        we only ever need the current and the previous row
+        int[] prev = new int[27];
+        Arrays.fill(prev, Integer.MAX_VALUE);
+
+//        base case
+        prev[26] = 0;
+
+        for(int i = 0; i < n - 1; i++) {
+            int currChar = word.charAt(i) - 'A';
+            int nextChar = word.charAt(i + 1) - 'A';
+
+            int[] curr = new int[27];
+            Arrays.fill(curr, Integer.MAX_VALUE);
+
+            for(int other = 0; other < 27; other++) {
+                if(prev[other] == Integer.MAX_VALUE) continue;
+
+//                option 1: move finger at word[i] to nextChar
+                int dist1 = getDist(currChar, nextChar);
+                curr[other] = Math.min(curr[other], prev[other] + dist1);
+
+//                option 2: move the 'other' finger to nextChar
+//                (in which case currChar becomes the other for the next state transition)
+                int dist2 = (other == 26) ? 0 : getDist(other, nextChar);
+                curr[currChar] = Math.min(curr[currChar], prev[other] + dist2);
+            }
+
+//            shift the context forward
+            prev = curr;
+        }
+
+        int minTotalDist = Integer.MAX_VALUE;
+        for(int dist: prev)
+            minTotalDist = Math.min(minTotalDist, dist);
+
+        return minTotalDist;
+    }
+//    dp; optimized(2d); time: O(n * 26), space: O(n * 26)
+    public static int minimumDistance1(String word) {
 //        dp[i][j] represents the minimum distance to reach index i
 //        with the 'other' finger at character 'j'
 //        j = 26, represents hovering state, 0 cost
@@ -45,7 +88,7 @@ public class MinDistance1320 {
     }
 
 //    dp; non optimized(3d); time: O(n * 26 * 26), space: O(n * 26 * 26)
-    public static int minimumDistance1(String word) {
+    public static int minimumDistance2(String word) {
         int n = word.length();
 //        dp[index][finger1_pos][finger2_pos]
 //        26 represents the hovering starting position
