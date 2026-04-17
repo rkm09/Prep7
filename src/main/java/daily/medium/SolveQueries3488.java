@@ -22,7 +22,8 @@ public class SolveQueries3488 {
                 res.add(-1); continue;
             }
 //            efficiently find the position of qIdx in the sorted list of indices
-            int pos = Collections.binarySearch(indices, qIdx);
+//            int pos = Collections.binarySearch(indices, qIdx);
+            int pos = binarySearch(indices, qIdx);
             int m = indices.size();
 
 //            neighbor to the left (with wrap-around)
@@ -67,6 +68,20 @@ public class SolveQueries3488 {
         }
 
         return res;
+    }
+
+    private static int binarySearch(List<Integer> li, int idx) {
+        int left = 0, right = li.size() - 1;
+        while(left < right) {
+            int mid = (left + right) / 2;
+            if(li.get(mid) == idx)
+                return mid;
+            if(li.get(mid) < idx)
+                left = mid + 1;
+            else
+                right = mid - 1;
+        }
+        return left;
     }
 }
 
