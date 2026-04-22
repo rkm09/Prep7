@@ -8,7 +8,7 @@ public class TwoEditWords2452 {
         System.out.println(twoEditWords(new String[]{"yes"}, new String[]{"not"}));
     }
 
-//    brute force(since the constraint size is small); time: O(m.n.q), space: O(n)
+//    brute force(since the constraint size is small); time: O(m.n.q), space: O(1)
     public static List<String> twoEditWords(String[] queries, String[] dictionary) {
         List<String> ans = new ArrayList<>();
         for(String query : queries) {
