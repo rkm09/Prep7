@@ -5,11 +5,71 @@ import java.util.List;
 
 public class TwoEditWords2452 {
     public static void main(String[] args) {
-        System.out.println(twoEditWords(new String[]{"yes"}, new String[]{"not"}));
+        TwoEditWords2452 t = new TwoEditWords2452();
+        System.out.println(t.twoEditWords(new String[]{"yes"}, new String[]{"not"}));
+    }
+
+//    make it nested class, so we prevent any memory leaks. the inner class does not need a reference to the outer
+    static class TrieNode {
+        TrieNode[] children = new TrieNode[26];
+        boolean isWord = false;
+    }
+
+//    trie; time: O(D.L), space: O(D.L) [D - number of dictionary words, L - length of the words]
+    public List<String> twoEditWords(String[] queries, String[] dictionary) {
+        TrieNode root = new TrieNode();
+//        step 1: build the Trie from the dictionary
+        for(String word : dictionary)
+            insert(root, word);
+
+        List<String> result = new ArrayList<>();
+        for(String query : queries) {
+            if(canMatch(query, 0, root, 0))
+                result.add(query);
+        }
+
+        return result;
+    }
+
+    private boolean canMatch(String word, int index, TrieNode curr, int edits) {
+//        base case: if we've reached the end withing 2 edits it's a match
+        if(index == word.length())
+            return edits <= 2;
+
+        int targetIdx = word.charAt(index) - 'a';
+
+//        optimization: try the exact character match first (0 cost)
+        if(curr.children[targetIdx] != null)
+            if(canMatch(word, index + 1, curr.children[targetIdx], edits))
+                return true;
+
+//        if we still have edits available, try all other possible characters(1 cost each)
+        if(edits < 2) {
+            for(int i = 0; i < 26; i++) {
+//                skip the target index as we have already checked it with edits + 0
+                if(i != targetIdx && curr.children[i] != null)
+                    if(canMatch(word, index + 1, curr.children[i], edits + 1))
+                        return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void insert(TrieNode root, String word) {
+        TrieNode curr = root;
+        for(char c : word.toCharArray()) {
+            int idx = c - 'a';
+            if(curr.children[idx] == null)
+                curr.children[idx] = new TrieNode();
+
+            curr = curr.children[idx];
+        }
+        curr.isWord = true;
     }
 
 //    brute force(since the constraint size is small); time: O(m.n.q), space: O(1)
-    public static List<String> twoEditWords(String[] queries, String[] dictionary) {
+    public List<String> twoEditWords1(String[] queries, String[] dictionary) {
         List<String> ans = new ArrayList<>();
         for(String query : queries) {
             for(String s : dictionary) {
