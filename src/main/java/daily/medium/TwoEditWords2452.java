@@ -31,6 +31,7 @@ public class TwoEditWords2452 {
         return result;
     }
 
+//    dfs
     private boolean canMatch(String word, int index, TrieNode curr, int edits) {
 //        base case: if we've reached the end withing 2 edits it's a match
         if(index == word.length())
