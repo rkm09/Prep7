@@ -91,3 +91,19 @@ we are iterating over disjoint sets of indices.Every index from the original arr
 in the indexMap.Therefore, the inner for loop executes exactly $N$ times across the entire execution of the method.
 Total Complexity: $O(N)$ for grouping + $O(N)$ for calculating = $O(N)$.
  */
+
+/*
+The Rational Rule of Thumb
+If you are comfortable with the "worst-case" memory usage to guarantee "best-case" CPU performance, then yes,
+you can absolutely treat (int) (n / 0.75) + 1 (or HashMap.newHashMap(n)) as your standard practice whenever $n$ is available.
+It’s less about "hardcoding" and more about resource stewardship. In high-frequency trading or massive data processing,
+we always pre-size. In a memory-constrained microservice, we might let the map grow organically to keep the footprint small.
+1. The "Waste vs. Speed" Trade-off
+If you have $n = 100,000$ elements, but only 10 unique keys, new HashMap<>(133334) creates an array with over 133,000 slots just to store 10 entries.
+The Result: You've traded about 0.5MB to 1MB of heap memory just to save a few microseconds of rehashing.
+The Verdict: In your current "distance" problem, $n$ represents the total elements, but we don't know the number of unique keys. If every number is unique,
+the pre-sizing is a lifesaver. If there's only one unique number, we've over-allocated.
+2. Sparsity and Iteration
+If you over-allocate a map significantly, iterating over it (e.g., map.forEach) can actually become slower.
+The JVM has to scan the internal bucket array, and if that array is 133,000 slots long but only contains 10 items, the CPU has to "skip" a lot of empty space.
+*/
