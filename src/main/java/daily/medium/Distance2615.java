@@ -13,6 +13,7 @@ public class Distance2615 {
         int n = nums.length;
 //        prevent resizing/rehashing during initial grouping phase
         Map<Integer, List<Integer>> indexMap = new HashMap<>((int) (n / 0.75) + 1);
+//        Map<Integer, List<Integer>> indexMap = HashMap.newHashMap(n);
         for(int i = 0; i < n; i++)
             indexMap.computeIfAbsent(nums[i], k -> new ArrayList<>())
                     .add(i);
@@ -64,7 +65,8 @@ public class Distance2615 {
 }
 
 /*
-You are given a 0-indexed integer array nums. There exists an array arr of length nums.length, where arr[i] is the sum of |i - j| over all j such that nums[j] == nums[i] and j != i. If there is no such j, set arr[i] to be 0.
+You are given a 0-indexed integer array nums. There exists an array arr of length nums.length, where arr[i] is the sum of |i - j| over all j such that nums[j] == nums[i] and j != i.
+If there is no such j, set arr[i] to be 0.
 Return the array arr.
 Example 1:
 Input: nums = [1,3,1,1,2]
