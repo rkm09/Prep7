@@ -17,7 +17,7 @@ You are given an integer array nums of length n and a 2D integer array queries o
 For each query, you must apply the following operations in order:
 Set idx = li.
 While idx <= ri:
-Update: nums[idx] = (nums[idx] * vi) % (109 + 7).
+Update: nums[idx] = (nums[idx] * vi) % (10^9 + 7).
 Set idx += ki.
 Return the bitwise XOR of all elements in nums after processing all queries.
 Example 1:
@@ -35,11 +35,11 @@ The first query [1, 4, 2, 3] multiplies the elements at indices 1 and 3 by 3, tr
 The second query [0, 2, 1, 2] multiplies the elements at indices 0, 1, and 2 by 2, resulting in [4, 18, 2, 15, 4].
 Finally, the XOR of all elements is 4 ^ 18 ^ 2 ^ 15 ^ 4 = 31.
 Constraints:
-1 <= n == nums.length <= 105
-1 <= nums[i] <= 109
-1 <= q == queries.length <= 105
+1 <= n == nums.length <= 10^5
+1 <= nums[i] <= 10^9
+1 <= q == queries.length <= 10^5
 queries[i] = [li, ri, ki, vi]
 0 <= li <= ri < n
 1 <= ki <= n
-1 <= vi <= 105
+1 <= vi <= 10^5
  */
