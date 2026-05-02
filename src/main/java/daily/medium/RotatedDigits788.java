@@ -5,6 +5,7 @@ public class RotatedDigits788 {
         System.out.println(rotatedDigits(10));
     }
 
+//    traversal; time: O(nlogn), space: O(1)
     public static int rotatedDigits(int n) {
         int count = 0;
         for(int i = 1; i <= n; i++) {
