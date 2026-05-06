@@ -3,7 +3,7 @@ package daily.medium;
 public class RotateBox1861 {
     public static void main(String[] args) {
         char[][] boxGrid = {{'#'},{'.'},{'#'}};
-        rotateTheBox(boxGrid);
+        char[][] res = rotateTheBox(boxGrid);
     }
 
 //    combine rotation and gravity; time: O(m.n), space: O(1)
