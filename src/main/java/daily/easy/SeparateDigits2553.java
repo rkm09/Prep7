@@ -1,6 +1,7 @@
 package daily.easy;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SeparateDigits2553 {
@@ -8,8 +9,30 @@ public class SeparateDigits2553 {
         int[] res = separateDigits(new int[]{7,1,3,9});
     }
 
-//    simulation; time: O(n.d), space: O(d); d - number of digits in each element. O(n. log10(value))
+//    reverse traversal; time: O(n.d), space: O(d); d - number of digits in each element. O(n. log10(value))
     public static int[] separateDigits(int[] nums) {
+        List<Integer> res = new ArrayList<>();
+        int n = nums.length;
+        for(int i = n - 1; i >= 0; i--) {
+            int num = nums[i];
+            while(num > 0) {
+                int digit = num % 10;
+                num /= 10;
+                res.add(digit);
+            }
+        }
+
+        Collections.reverse(res);
+        int[] ans = new int[res.size()];
+        for(int i = 0; i < res.size(); i++) {
+            ans[i] = res.get(i);
+        }
+
+        return ans;
+     }
+
+//    simulation; time: O(n.d), space: O(d); d - number of digits in each element. O(n. log10(value))
+    public static int[] separateDigits1(int[] nums) {
         List<Integer> li = digits(nums);
         int size = li.size();
         int[] ans = new int[size];
