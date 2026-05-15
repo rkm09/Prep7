@@ -47,3 +47,13 @@ n == nums.length
 All the integers of nums are unique.
 nums is sorted and rotated between 1 and n times.
  */
+
+/*
+Framework TypeLoop ConditionLeft UpdateRight UpdateTerminating StateBest Used For
+Type 1: The Exact Match
+while (left <= right) left = mid + 1 right = mid - 1 left > right (No element left) Searching for a specific target value (e.g., standard Binary Search). Returns -1 if not found.
+Type 2: The Boundary Hunter
+while (left < right)left = mid + 1right = midleft == right (1 element left)Finding a turning point, minimum, or first/last occurrence. (What we used here)
+Type 3: The Neighborhood Watch
+while (left + 1 < right)left = midright = midleft + 1 == right (2 elements left)Great when you need to compare an element to both its left and right neighbors without going out of bounds. You evaluate left and right manually after the loop.Summary Checklist for Type 2 (Our Code)Next time you write a boundary-seeking binary search, just ask yourself these two questions:Can mid be the answer? If yes, your pointer must include it (right = mid or left = mid). If no, exclude it (mid + 1 or mid - 1).If 2 elements are left, will it shrink? If mid rounds down to left, then a right = mid update will collapse right onto left. Loop terminates. No infinite loop possible.
+ */
