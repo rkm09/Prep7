@@ -23,7 +23,7 @@ From any index i, you can jump to another index j under the following rules:
 Jump to index j where j > i is allowed only if nums[j] < nums[i].
 Jump to index j where j < i is allowed only if nums[j] > nums[i].
 For each index i, find the maximum value in nums that can be reached by following any sequence of valid jumps starting at i.
-Return an array ans where ans[i] is the maximum value reachable starting from index i.
+Return an array ans where ans[i] is the maximu      m value reachable starting from index i.
 Example 1:
 Input: nums = [2,1,3]
 Output: [2,2,3]
