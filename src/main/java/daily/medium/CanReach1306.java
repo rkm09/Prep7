@@ -1,11 +1,15 @@
 package daily.medium;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 public class CanReach1306 {
     public static void main(String[] args) {
         CanReach1306 c = new CanReach1306();
         System.out.println(c.canReach(new int[]{3,0,2,1,2}, 2));
     }
 
+//    dfs; time: O(n), space: O(n)
     public boolean canReach(int[] arr, int start) {
         boolean[] visited = new boolean[arr.length];
         return dfs(arr, start, visited);
@@ -16,10 +20,53 @@ public class CanReach1306 {
         if(arr[index] == 0) return true;
         if(!visited[index]) {
             visited[index] = true;
-            boolean left = dfs(arr, index - arr[index], visited);
-            boolean right = dfs(arr, index + arr[index], visited);
-            return left || right;
+            return dfs(arr, index + arr[index], visited) || dfs(arr, index - arr[index], visited);
         }
+        return false;
+    }
+
+//    backtracking dfs; time: O(n), space: O(1) [but slower due to backtracking, unless mutating is allowed]
+    public boolean canReach1(int[] arr, int start) {
+        return dfs(arr, start);
+    }
+
+    private boolean dfs(int[] arr, int index) {
+        if(index < 0 || index >= arr.length) return false;
+        if(arr[index] == 0) return true;
+        if(arr[index] < 0) return false; // this is how we track visited
+        int originalValue = arr[index];
+        arr[index] = -1 * originalValue;
+
+        boolean found = dfs(arr, index + arr[index]) || dfs(arr, index - arr[index]);
+//        backtrack and revert once done; note: -0 no need to bother, since 0 is already the winning case
+        arr[index] = originalValue;
+
+        return found;
+    }
+
+    public boolean canReach2(int[] arr, int start) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        boolean[] visited = new boolean[arr.length];
+        stack.push(start);
+
+        while(!stack.isEmpty()) {
+            int index = stack.pop();
+//            base case: found
+            if(arr[index] == 0) return true;
+
+            if(!visited[index]) {
+                visited[index] = true;
+//            calculate next moves
+                int left = index - arr[index];
+                int right = index + arr[index];
+//            push valid moves onto the stack
+                if (left >= 0 && !visited[left])
+                    stack.push(left);
+                if (right < arr.length && !visited[right])
+                    stack.push(right);
+            }
+        }
+
         return false;
     }
 }
