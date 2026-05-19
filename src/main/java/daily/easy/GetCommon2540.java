@@ -1,13 +1,31 @@
 package daily.easy;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class GetCommon2540 {
     public static void main(String[] args) {
         System.out.println(getCommon(new int[]{1,2,3}, new int[]{2,4}));
     }
 
+//    two pointer; time: O(m + n), space: O(1) [fastest]
+    public static int getCommon(int[] nums1, int[] nums2) {
+        int n1 = nums1.length, n2 = nums2.length;
+        int first = 0, second = 0;
+        while(first < n1 && second < n2) {
+            if(nums1[first] < nums2[second])
+                first++;
+            else if(nums1[first] > nums2[second])
+                second++;
+            else
+                return nums1[first];
+        }
+
+        return -1;
+    }
 
 //    binary search; time: O(NlogM), space: O(1)
-    public static int getCommon(int[] nums1, int[] nums2) {
+    public static int getCommon1(int[] nums1, int[] nums2) {
         for(int num : nums1) {
             if(binarySearch(nums2, num))
                 return num;
@@ -20,17 +38,30 @@ public class GetCommon2540 {
         int left = 0, right = nums2.length - 1;
         while(left <= right) {
             int mid = (left + right) >>> 1;
-            if(nums2[mid] == val)
-                return true;
-            else if(nums2[mid] > val)
+            if(nums2[mid] > val)
                 right = mid - 1;
-            else
+            else if(nums2[mid] < val)
                 left = mid + 1;
-
+            else
+                return true;
         }
 
         return false;
     }
+
+    //    hashset; time: O(n + m), space: O(n) [slowest] though hashset contains should take O(1), still turns out to be slow
+    public static int getCommon2(int[] nums1, int[] nums2) {
+        Set<Integer> set1 = new HashSet<>();
+        for(int num : nums1)
+            set1.add(num);
+        for(int num : nums2) {
+            if(set1.contains(num))
+                return num;
+        }
+
+        return -1;
+    }
+
 }
 
 /*
