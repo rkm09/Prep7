@@ -8,7 +8,32 @@ public class CommonPrefix3043 {
         System.out.println(longestCommonPrefix(new int[]{1,10,100}, new int[]{1000}));
     }
 
+//  hashset; time: O(N + M), space: O(N)
     public static int longestCommonPrefix(int[] arr1, int[] arr2) {
+        int ans = 0;
+        Set<Integer> prefixSet = new HashSet<>();
+        for(int num : arr1) {
+            while(num > 0) {
+                prefixSet.add(num);
+                num /= 10;
+            }
+        }
+
+        for(int num : arr2) {
+            while(num > 0) {
+                if(prefixSet.contains(num)) {
+                    int len = (int) Math.log10(num) + 1;
+                    ans = Math.max(ans, len);
+                    break;
+                }
+                num /= 10;
+            }
+        }
+
+        return ans;
+    }
+
+    public static int longestCommonPrefix1(int[] arr1, int[] arr2) {
         int ans = 0;
         Set<Integer> prefixSet1 = new HashSet<>();
         for(int num : arr1) {

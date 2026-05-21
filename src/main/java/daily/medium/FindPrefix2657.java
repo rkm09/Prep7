@@ -9,7 +9,7 @@ public class FindPrefix2657 {
     }
 
     public static int[] findThePrefixCommonArray(int[] A, int[] B) {
-
+        return new int[]{};
     }
 }
 

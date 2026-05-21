@@ -7,7 +7,7 @@ public class MaxScore3225 {
     }
 
     public static long maximumScore(int[][] grid) {
-
+        return 0;
     }
 }
 

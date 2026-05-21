@@ -6,7 +6,7 @@ public class MaxDistance3464 {
     }
 
     public static int maxDistance(int side, int[][] points, int k) {
-
+        return 0;
     }
 }
 

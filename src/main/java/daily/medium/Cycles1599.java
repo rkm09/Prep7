@@ -7,7 +7,7 @@ public class Cycles1599 {
     }
 
     public static boolean containsCycle(char[][] grid) {
-
+        return false;
     }
 }
 

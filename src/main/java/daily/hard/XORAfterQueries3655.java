@@ -8,7 +8,7 @@ public class XORAfterQueries3655 {
     }
 
     public static int xorAfterQueries(int[] nums, int[][] queries) {
-
+        return 0;
     }
 }
 
