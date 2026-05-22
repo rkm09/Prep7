@@ -4,12 +4,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CommonPrefix3043 {
+//  since we know the cap is at 10^8;
+    private static final int[] POW10 = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000};
     public static void main(String[] args) {
         CommonPrefix3043 c = new CommonPrefix3043();
         System.out.println(c.longestCommonPrefix(new int[]{1,10,100}, new int[]{1000}));
     }
 
-//    trie; time: O(m.d + n.d) -> O(m + n), space: O(n)
+//    optimised trie (speed up with l1/l2 cache); time: O(m + n), space: O(m)
+//    no heap allocation (num/divisor, num % divisor), no array copying (no numStr.toCharArray allocation)
     public int longestCommonPrefix(int[] arr1, int[] arr2) {
         Trie trie = new Trie();
         for(int num : arr1)
@@ -29,6 +32,66 @@ public class CommonPrefix3043 {
     }
 
     static class Trie {
+        TrieNode root = new TrieNode();
+
+        void insert(int num) {
+            TrieNode node = root;
+            int log = (int) Math.log10(num);
+//            int divisor = (int) Math.pow(10, log);
+            int divisor = POW10[log];
+
+            while(divisor > 0) {
+                int idx = num / divisor;
+                num  %= divisor;
+                divisor /= 10;
+                if(node.children[idx] == null)
+                    node.children[idx] = new TrieNode();
+
+                node = node.children[idx];
+            }
+        }
+
+        int findLongestPrefix(int num) {
+            TrieNode node = root;
+            int log = (int) Math.log10(num);
+//            int divisor = (int) Math.pow(10, log); // e.g. 10^4
+            int divisor = POW10[log];
+            int len = 0;
+
+            while(divisor > 0) {
+                int idx = num / divisor;
+                num %= divisor;
+                divisor /= 10;
+
+                if(node.children[idx] != null) {
+                    len++;
+                    node = node.children[idx];
+                } else
+                    break;
+            }
+
+            return len;
+        }
+    }
+
+//    trie (gc due to object creation and string conversion); time: O(m.d + n.d) -> O(m + n), space: O(n)
+//    pro: fewer total inserts
+    public int longestCommonPrefix1(int[] arr1, int[] arr2) {
+        Trie1 trie = new Trie1();
+        for(int num : arr1)
+            trie.insert(num);
+
+        int longestPrefix = 0;
+        for(int num : arr2) {
+            int len = trie.findLongestPrefix(num);
+            longestPrefix = Math.max(longestPrefix, len);
+        }
+
+        return longestPrefix;
+    }
+
+
+    static class Trie1 {
         TrieNode root = new TrieNode();
 
         void insert(int num) {
@@ -61,8 +124,8 @@ public class CommonPrefix3043 {
         }
     }
 
-    //  hashset; time: O(N + M), space: O(N)
-    public int longestCommonPrefix1(int[] arr1, int[] arr2) {
+    //  optimized hashset(but prone to hash collision); time: O(N + M), space: O(N)
+    public int longestCommonPrefix2(int[] arr1, int[] arr2) {
         int ans = 0;
         Set<Integer> prefixSet = new HashSet<>();
         for(int num : arr1) {
@@ -86,7 +149,8 @@ public class CommonPrefix3043 {
         return ans;
     }
 
-    public int longestCommonPrefix2(int[] arr1, int[] arr2) {
+//    hashset;
+    public int longestCommonPrefix3(int[] arr1, int[] arr2) {
         int ans = 0;
         Set<Integer> prefixSet1 = new HashSet<>();
         for(int num : arr1) {
