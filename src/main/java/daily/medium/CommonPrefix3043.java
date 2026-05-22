@@ -5,11 +5,64 @@ import java.util.Set;
 
 public class CommonPrefix3043 {
     public static void main(String[] args) {
-        System.out.println(longestCommonPrefix(new int[]{1,10,100}, new int[]{1000}));
+        CommonPrefix3043 c = new CommonPrefix3043();
+        System.out.println(c.longestCommonPrefix(new int[]{1,10,100}, new int[]{1000}));
     }
 
-//  hashset; time: O(N + M), space: O(N)
-    public static int longestCommonPrefix(int[] arr1, int[] arr2) {
+//    trie; time: O(m.d + n.d) -> O(m + n), space: O(n)
+    public int longestCommonPrefix(int[] arr1, int[] arr2) {
+        Trie trie = new Trie();
+        for(int num : arr1)
+            trie.insert(num);
+
+        int longestPrefix = 0;
+        for(int num : arr2) {
+            int len = trie.findLongestPrefix(num);
+            longestPrefix = Math.max(longestPrefix, len);
+        }
+
+        return longestPrefix;
+    }
+
+    static class TrieNode {
+        TrieNode[] children = new TrieNode[10];
+    }
+
+    static class Trie {
+        TrieNode root = new TrieNode();
+
+        void insert(int num) {
+            TrieNode node = root;
+            String numStr = Integer.toString(num);
+            for(char digit : numStr.toCharArray()) {
+                int idx = digit - '0';
+                if(node.children[idx] == null)
+                    node.children[idx] = new TrieNode();
+
+                node = node.children[idx];
+            }
+        }
+
+        int findLongestPrefix(int num) {
+            TrieNode node = root;
+            String numStr = Integer.toString(num);
+            int len = 0;
+
+            for(char digit : numStr.toCharArray()) {
+                int idx = digit - '0';
+                if(node.children[idx] != null) {
+                    len++;
+                    node = node.children[idx];
+                } else
+                    break;
+            }
+
+            return len;
+        }
+    }
+
+    //  hashset; time: O(N + M), space: O(N)
+    public int longestCommonPrefix1(int[] arr1, int[] arr2) {
         int ans = 0;
         Set<Integer> prefixSet = new HashSet<>();
         for(int num : arr1) {
@@ -33,7 +86,7 @@ public class CommonPrefix3043 {
         return ans;
     }
 
-    public static int longestCommonPrefix1(int[] arr1, int[] arr2) {
+    public int longestCommonPrefix2(int[] arr1, int[] arr2) {
         int ans = 0;
         Set<Integer> prefixSet1 = new HashSet<>();
         for(int num : arr1) {
@@ -62,7 +115,7 @@ public class CommonPrefix3043 {
     }
 
 //    TLE [10^8] ops. brute force;
-    public static int longestCommonPrefixX(int[] arr1, int[] arr2) {
+    public int longestCommonPrefixX(int[] arr1, int[] arr2) {
         int ans = 0;
         for(int num1 : arr1) {
             for (int num2 : arr2) {
@@ -75,7 +128,7 @@ public class CommonPrefix3043 {
         return ans;
     }
 
-    private static int lcp(String s1, String s2) {
+    private int lcp(String s1, String s2) {
         int i = 0, j = 0, count = 0;
         while(i < s1.length() && j < s2.length()) {
             if(s1.charAt(i) == s2.charAt(j)) {
