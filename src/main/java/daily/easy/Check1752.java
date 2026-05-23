@@ -1,5 +1,7 @@
 package daily.easy;
 
+import java.util.Arrays;
+
 public class Check1752 {
     public static void main(String[] args) {
         // [6,10,6] (true); [10,1,1,10] (true) // [5,1,5,1] (false)
@@ -18,11 +20,34 @@ public class Check1752 {
             if(inflexionCount > 1) return false;
         }
 
+//        premise is rotated array
         if(nums[0] < nums[n - 1])
             inflexionCount++;
 
         return inflexionCount <= 1;
     }
+
+//    sorting and rotation offset; time: O(n^2), space: O(n)
+    public static boolean check1(int[] nums) {
+        int size = nums.length;
+
+        int[] sortedArr = nums.clone();
+        Arrays.sort(sortedArr);
+
+        for(int rotationOffset = 0; rotationOffset < size; rotationOffset++) {
+            boolean isMatch = true;
+            for(int index = 0; index < size; index++) {
+                if(sortedArr[(rotationOffset + index) % size] != nums[index]) {
+                    isMatch = false;
+                    break;
+                }
+            }
+            if(isMatch) return true;
+        }
+
+        return false;
+    }
+
 }
 
 /*
