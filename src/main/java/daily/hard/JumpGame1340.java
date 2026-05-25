@@ -77,4 +77,14 @@ Constraints:
 The key insight is to realize that the choices you can make from any index i depend only on the values in the array and the jump limit d.
 Since you can only jump to a strictly smaller value (arr[i] > arr[j]), there are no cycles.
 This means the problem can be modeled as a Directed Acyclic Graph (DAG), making it perfect for memoization.
+
+Summary Table:      Tabulation vs. Memoization
+Feature             Top-Down (Memoization)                           Bottom-Up (Tabulation)
+Core Concept    Recursive + Remembering results                 Iterative + Building up results
+State Order     Solved as needed ("On-Demand")                  Solved sequentially (0, 1, 2...)
+Storage         A cache/memo table checked during recursion     A table filled out step-by-step
+Overhead        Uses recursion stack space                      No recursion overhead, just loops
+
+Memoization specifically refers to caching results inside a
+recursive process so you don't repeat a branch of a tree you've already walked down.
  */
