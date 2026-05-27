@@ -10,17 +10,8 @@ public class CanReach1871 {
         if(s.charAt(n - 1) != '0')
             return false;
         boolean[] dp = new boolean[n];
-        return dfs(s.toCharArray(), minJump, maxJump, dp, 0);
-    }
 
-    private static boolean dfs(char[] c, int minJump, int maxJump, boolean[] dp, int idx) {
-        if(idx == c.length - 1)
-            return true;
-            for(int j = idx + minJump ; j <= idx + maxJump; j++) {
-                if(c[j] != '0') continue;
-
-            }
-
+        return true;
     }
 }
 
@@ -40,7 +31,7 @@ Example 2:
 Input: s = "01101110", minJump = 2, maxJump = 3
 Output: false
 Constraints:
-2 <= s.length <= 105
+2 <= s.length <= 10^5
 s[i] is either '0' or '1'.
 s[0] == '0'
 1 <= minJump <= maxJump < s.length
