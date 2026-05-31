@@ -1,5 +1,8 @@
 package daily.medium;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 public class CanReach1871 {
     public static void main(String[] args) {
         System.out.println(canReach("011010", 2, 3));
@@ -10,6 +13,7 @@ public class CanReach1871 {
         if(s.charAt(n - 1) != '0')
             return false;
         boolean[] dp = new boolean[n];
+        Deque<Integer> deque = new ArrayDeque<>();
 
         return true;
     }
