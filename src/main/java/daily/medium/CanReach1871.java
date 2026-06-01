@@ -1,21 +1,46 @@
 package daily.medium;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
 
 public class CanReach1871 {
     public static void main(String[] args) {
         System.out.println(canReach("011010", 2, 3));
     }
 
+//    bottom up dp + prefix sum; time: O(n), space: O(n)
     public static boolean canReach(String s, int minJump, int maxJump) {
         int n = s.length();
-        if(s.charAt(n - 1) != '0')
+//        if the last character is a '1', we can never reach it
+        if (s.charAt(n - 1) != '0')
             return false;
-        boolean[] dp = new boolean[n];
-        Deque<Integer> deque = new ArrayDeque<>();
 
-        return true;
+//        dp[i] will be 1, if index i is reachable, 0 otherwise
+        int[] dp = new int[n];
+//        prefixSum[i] stores the prefix sum of the dp array
+        int[] prefixSum = new int[n];
+//        base case: we start at 0
+        dp[0] = 1;
+        prefixSum[0] = 1;
+
+        for (int i = 1; i < n; i++) {
+//            if the current character is '0', check if it is reachable
+            if (s.charAt(i) == '0') {
+//                define search boundaries
+                int left = i - maxJump;
+                int right = i - minJump;
+//                ensure window boundaries are valid
+                if (right >= 0) {
+                    left = Math.max(left, 0);
+//                    count reachable positions in the window [left, right] using prefix sums
+                    int reachableInWindow = prefixSum[right] - (left > 0 ? prefixSum[left - 1] : 0);
+                    if (reachableInWindow > 0)
+                        dp[i] = 1;
+                }
+            }
+//            maintain the prefix sums sequentially
+            prefixSum[i] = prefixSum[i - 1] + dp[i];
+        }
+
+        return dp[n - 1] == 1;
     }
 }
 
