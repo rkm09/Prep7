@@ -1,6 +1,6 @@
 package daily.medium;
 
-public class Cycles1599 {
+public class Cycles1559 {
     public static void main(String[] args) {
         char[][] grid = {{'a','b','b'},{'b','z','b'},{'b','b','a'}};
         System.out.println(containsCycle(grid));
