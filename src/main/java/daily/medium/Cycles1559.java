@@ -7,7 +7,7 @@ public class Cycles1559 {
         System.out.println(c.containsCycle(grid));
     }
 
-    //    union find; time: O(M.N.alpha(M.N)), space: O(M.N)
+    //    union find; time: O(M.N.alpha(M.N)), space: O(M.N). [best for this type]
     public boolean containsCycle(char[][] grid) {
         int m = grid.length, n = grid[0].length;
         UnionFind dsu = new UnionFind(m * n);
