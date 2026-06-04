@@ -3,30 +3,30 @@ package daily.medium;
 public class Cycles1559 {
     public static void main(String[] args) {
         Cycles1559 c = new Cycles1559();
-        char[][] grid = {{'a','b','b'},{'b','z','b'},{'b','b','a'}};
+        char[][] grid = {{'a', 'b', 'b'}, {'b', 'z', 'b'}, {'b', 'b', 'a'}};
         System.out.println(c.containsCycle(grid));
     }
 
-//    union find; time: O(M.N.alpha(M.N)), space: O(M.N)
+    //    union find; time: O(M.N.alpha(M.N)), space: O(M.N)
     public boolean containsCycle(char[][] grid) {
-        int m  = grid.length, n = grid[0].length;
+        int m = grid.length, n = grid[0].length;
         UnionFind dsu = new UnionFind(m * n);
 
-        for(int i = 0; i < m; i++) {
-            for(int j = 0; j < n; j++) {
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
 //                flatten 2d into 1d index
                 int currentCell = i * n + j;
 //                check top neighbor
-                if(i > 0 && grid[i][j] == grid[i - 1][j]) {
+                if (i > 0 && grid[i][j] == grid[i - 1][j]) {
                     int topCell = (i - 1) * n + j;
-                    if(dsu.isConnected(currentCell, topCell))
+                    if (dsu.isConnected(currentCell, topCell))
                         return true; // cycle detected!
                     dsu.union(currentCell, topCell);
                 }
 //                check left neighbor
-                if(j > 0 && grid[i][j] == grid[i][j - 1]) {
+                if (j > 0 && grid[i][j] == grid[i][j - 1]) {
                     int leftCell = i * n + (j - 1);
-                    if(dsu.isConnected(currentCell, leftCell))
+                    if (dsu.isConnected(currentCell, leftCell))
                         return true; // cycle detected!
                     dsu.union(currentCell, leftCell);
                 }
@@ -39,21 +39,22 @@ public class Cycles1559 {
     static class UnionFind {
         private final int[] parent;
         private final int[] rank;
+
         UnionFind(int n) {
             parent = new int[n];
             rank = new int[n];
-            for(int i = 0; i < n; i++)
+            for (int i = 0; i < n; i++)
                 parent[i] = i;
         }
 
-//        path compression
+        //        path compression
         public int find(int i) {
-            if(parent[i] != i)
+            if (parent[i] != i)
                 parent[i] = find(parent[i]);
             return parent[i];
         }
 
-//        union
+        //        union
         public void union(int a, int b) {
             int rootA = find(a);
             int rootB = find(b);
@@ -72,6 +73,53 @@ public class Cycles1559 {
         public boolean isConnected(int a, int b) {
             return find(a) == find(b);
         }
+    }
+
+
+//    dfs; time: O(M.N), space: O(M.N)
+    public boolean containsCycle1(char[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        boolean[][] visited = new boolean[m][n];
+//        iterate through every cell in the grid
+        for (int i = 0 ; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+//                if the cell hasn't been visited yet, start a new dfs traversal
+                if(!visited[i][j]) {
+//                    no parent for the starting cell of the path, so we pass -1,-1
+                    if (dfs(i, j, -1, -1, grid[i][j], grid, visited))
+                        return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private boolean dfs(int r, int c, int prevR, int prevC, char target, char[][] grid, boolean[][] visited) {
+//        mark the current cell as visited
+        visited[r][c] = true;
+//        direction vectors for moving up, down, left, right
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+
+        for (int i = 0; i < 4; i++) {
+            int nr = r + dr[i];
+            int nc = c + dc[i];
+//            check boundaries, check whether neighbor has exact same value
+            if (nr >= 0 && nr < grid.length && nc >= 0 && nc < grid[0].length && grid[nr][nc] == target) {
+//                skip the cell we just came from
+                if (nr == prevR && nc == prevC)
+                    continue;
+//                if the neighbor is already visited and not the parent then we have looped back into a cycle
+                if (visited[nr][nc])
+                    return true;
+//                otherwise, continue the depth first search down this path
+                if (dfs(nr, nc, r, c, target, grid, visited))
+                    return true;
+            }
+        }
+
+        return false;
     }
 }
 
