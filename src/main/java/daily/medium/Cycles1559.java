@@ -121,6 +121,80 @@ public class Cycles1559 {
 
         return false;
     }
+
+//    optimised dfs; time: O(m.n), space: O(m.n)
+    public boolean containsCycle2(char[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        int totalCells = m * n;
+//        flattened 1d visited array for cache friendliness
+        boolean[] visited = new boolean[totalCells];
+//        a single, fixed size primitive long array to serve as our explicit stack, we only need one due to bit packing
+        long[] stack = new long[totalCells];
+        int top = -1;
+
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+
+        for (int start = 0; start < totalCells; start++) {
+            if (visited[start]) continue;
+
+            int startR = start / n;
+            int startC = start % n;
+//            push initial state: currR = startR, currC = startC, prevR = 0xFFFF, prevC = 0xFFFF (-1 mask)
+            top++;
+            stack[top] = pack(startR, startC, 0xFFFF, 0xFFFF);
+            visited[start] = true;
+
+            while (top >= 0) {
+//                pop the bit packed 64 bit state from our primitive stack
+                long state = stack[top];
+                top--;
+//                unpack the 4 coordinates instantly using fast bitwise shifts and masks
+                int currR = (int) ((state >> 48) & 0xFFFF);
+                int currC = (int) ((state >> 32) & 0xFFFF);
+                int prevR = (int) ((state >> 16) & 0xFFFF);
+                int prevC = (int) (state & 0xFFFF);
+
+//                convert the 0xFFFF boundary placeholder to -1
+               // if(prevR == 0xFFFF) prevR = -1; not needed since even 65535 is unique
+               // if(prevC == 0xFFFF) prevC = -1;
+
+                char targetChar = grid[currR][currC];
+
+                for (int i = 0; i < 4; i++) {
+                    int nR = currR + dr[i];
+                    int nC = currC + dc[i];
+
+                    if (nR >= 0 && nR < m && nC >= 0 && nC < n && grid[nR][nC] == targetChar) {
+//                            rule check: skip the cell we immediately stepped out of
+                        if (nR == prevR && nC == prevC)
+                            continue;
+
+                        int neighbor1D = nR * n + nC;
+//                        cycle detected
+                        if (visited[neighbor1D])
+                            return true;
+
+                        visited[neighbor1D] = true;
+
+//                        push the packed next state to our primitive stack
+                        top++;
+                        stack[top] = pack(nR, nC, currR, currC);
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private long pack(int currR, int currC, int prevR, int prevC) {
+        return ((long) (currR & 0xFFFF) << 48) |
+                ((long) (currC & 0xFFFF) << 32) |
+                ((long) (prevR & 0xFFFF) << 16) |
+                (long) ((prevC & 0xFFFF));
+    }
+
 }
 
 /*
