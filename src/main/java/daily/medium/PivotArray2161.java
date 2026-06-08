@@ -1,33 +1,75 @@
 package daily.medium;
 
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
+import java.util.*;
 
 public class PivotArray2161 {
     public static void main(String[] args) {
         System.out.println(Arrays.toString(pivotArray(new int[]{9,12,5,10,14,3,10},10)));
     }
 
+//    two pointer; time: O(n), space: O(1)
     public static int[] pivotArray(int[] nums, int pivot) {
+        int n = nums.length, lessI = 0, greaterI = n - 1;
+        int[] ans = new int[n];
+        for (int i = 0, j = n - 1; i < n; i++, j--) {
+            if (nums[i] < pivot)
+                ans[lessI++] = nums[i];
+            if (nums[j] > pivot)
+                ans[greaterI--] = nums[j];
+        }
+
+        while (lessI <= greaterI)
+            ans[lessI++] = pivot;
+
+        return ans;
+    }
+
+//    fixed array; time: O(n), space: O(1)
+    public static int[] pivotArray1(int[] nums, int pivot) {
+        int less = 0, equal = 0;
+        for (int num : nums) {
+            if (num < pivot)
+                less++;
+            else if (num == pivot)
+                equal++;
+        }
+
+        int[] res = new int[nums.length];
+        int lessI = 0, equalI = less, greaterI = less + equal;
+
+        for (int num : nums) {
+            if (num < pivot)
+                res[lessI++] = num;
+            else if (num == pivot)
+                res[equalI++] = num;
+            else
+                res[greaterI++] = num;
+        }
+
+        return res;
+    }
+
+
+//    two queues (def); time: O(n), space: O(n)
+    public static int[] pivotArray2(int[] nums, int pivot) {
         Deque<Integer> queue1 = new ArrayDeque<>();
         Deque<Integer> queue2 = new ArrayDeque<>();
         int count = 0;
-        for(int num : nums) {
-            if(num < pivot)
+        for (int num : nums) {
+            if (num < pivot)
                 queue1.offer(num);
-            else if(num > pivot)
+            else if (num > pivot)
                 queue2.offer(num);
             else count++;
         }
 
         int[] res = new int[nums.length];
         int idx = 0;
-        while(!queue1.isEmpty())
+        while (!queue1.isEmpty())
             res[idx++] = queue1.poll();
-        while(count-- > 0)
+        while (count-- > 0)
             res[idx++] = pivot;
-        while(!queue2.isEmpty())
+        while (!queue2.isEmpty())
             res[idx++] = queue2.poll();
 
         return res;
