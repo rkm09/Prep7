@@ -1,13 +1,95 @@
 package daily.hard;
 
+import java.util.Arrays;
+
 public class TotalWavinessII3753 {
+    private static long[][][] memoCount;
+    private static long[][][] memoSum;
     public static void main(String[] args) {
         System.out.println(totalWaviness(120,130));
     }
 
 //    Digit DP;
     public static long totalWaviness(long num1, long num2) {
-        return 0;
+        return eval(num2) - eval(num1 - 1);
+    }
+
+    private static long eval(long num) {
+        if(num < 100) return 0;
+
+//        get length & decompress to a fast primitive int array
+        int len = (int) Math.log10(num) + 1;
+        int[] digits = new int[len];
+        long temp = num;
+        for (int i = len - 1; i >= 0; i--) {
+            digits[i] = (int) (temp % 10);
+            temp /= 10;
+        }
+
+//        compressed 3d memoization; [index][prev_digit][prev_digit2]
+//        10 is the placeholder for an invalid/ unplaced digit
+        memoCount = new long[len + 1][11][11];
+        memoSum = new long[len + 1][11][11];
+
+        for (int i = 0; i < len; i++) {
+            for (int j = 0; j < 11; j++) {
+                Arrays.fill(memoCount[i][j], -1);
+                Arrays.fill(memoSum[i][j], - 1);
+            }
+        }
+
+//        run the dfs, return {count, sum}
+        long[] result = dfs(0, 10, 10, 1, 0, digits);
+        return result[1];
+    }
+
+    private static long[] dfs(int idx, int prev, int prev2, int isLimit, int isStarted, int[] digits) {
+//        base case: full number successfully constructed
+        if (idx == digits.length)
+            return new long[] {1, 0};
+
+//        only read from cache if choices are unrestricted and number has started
+        if (isLimit == 0 && isStarted == 1)
+            if(memoCount[idx][prev][prev2] != -1)
+                return new long[] {memoCount[idx][prev][prev2], memoSum[idx][prev][prev2]};
+
+
+        long totalCount = 0, totalSum = 0;
+//        retrieve upper bound digit
+        int limit = (isLimit == 1) ? digits[idx] : 9;
+
+        for (int d = 0; d <= limit; d++) {
+            int nextLimit = (isLimit == 1 && d == limit) ? 1 : 0; // d == limit enough?
+            int nextStarted = (isStarted == 1 || d > 0) ? 1 : 0;
+
+            int wavinessContribution = 0;
+
+//            core waviness verification
+            if(isStarted == 1 && prev2 != 10) {
+                if(prev > prev2 && prev > d) wavinessContribution = 1; // peak
+                if(prev < prev2 && prev < d) wavinessContribution = 1;  // valley
+            }
+
+//            shift digits history forward
+            int nextPrev = (nextStarted == 1) ? d : 10;
+            int nextPrev2 = (nextStarted == 1) ? prev : 10;
+
+            long[] nextStateResult = dfs(idx + 1, nextPrev, nextPrev2, nextLimit, nextStarted, digits);
+
+            long suffixCount = nextStateResult[0];
+            long suffixSum = nextStateResult[1];
+
+            totalCount += suffixCount;
+            totalSum += suffixSum + (wavinessContribution * suffixCount);
+        }
+
+//        only write to cache for stable, repeating universal states
+        if (isLimit == 0 && isStarted == 1) {
+            memoCount[idx][prev][prev2] = totalCount;
+            memoSum[idx][prev][prev2] = totalSum;
+        }
+
+        return new long[] {totalCount, totalSum};
     }
 
 //    TLE;
