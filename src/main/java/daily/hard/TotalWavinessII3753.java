@@ -59,7 +59,7 @@ public class TotalWavinessII3753 {
         int limit = (isLimit == 1) ? digits[idx] : 9;
 
         for (int d = 0; d <= limit; d++) {
-            int nextLimit = (isLimit == 1 && d == limit) ? 1 : 0; // d == limit enough?
+            int nextLimit = (isLimit == 1 && d == limit) ? 1 : 0;
             int nextStarted = (isStarted == 1 || d > 0) ? 1 : 0;
 
             int wavinessContribution = 0;
